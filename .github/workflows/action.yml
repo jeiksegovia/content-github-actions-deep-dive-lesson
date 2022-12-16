@@ -76,3 +76,22 @@ jobs:
         run: |
           echo "${{ github.ref }}"
           aws s3 cp ${{ github.sha }}.zip s3://jk-github-action-test/
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: upload
+    steps:
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACESS_KEY }}
+          aws-region: us-east-1
+      - name: Update function code
+        run: |
+          echo "${{ github.ref }}"
+          aws lambda update-function-code \
+            --function-name jk_github_action_manual_lambda_test_1 \
+            --s3-bucket jk-github-action-test \
+            --se-key ${{ github.sha }}.zip \
+            --publish
