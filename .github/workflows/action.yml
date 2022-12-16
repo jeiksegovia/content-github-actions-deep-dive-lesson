@@ -93,5 +93,5 @@ jobs:
           aws lambda update-function-code \
             --function-name jk_github_action_manual_lambda_test_1 \
             --s3-bucket jk-github-action-test \
-            --se-key ${{ github.sha }}.zip \
+            --s3-key ${{ github.sha }}.zip \
             --publish
